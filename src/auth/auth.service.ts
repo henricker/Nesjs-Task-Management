@@ -6,5 +6,6 @@ import { UserRepository } from './user.repository';
 export class AuthService {
   constructor(
     @InjectRepository(UserRepository)
-    private userRepository: UserRepository){}
+    private userRepository: UserRepository,
+  ) {}
 }

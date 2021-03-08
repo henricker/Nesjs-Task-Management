@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   UseGuards,
   UsePipes,
   ValidationPipe,
@@ -27,31 +28,43 @@ export class TasksController {
 
   @Get()
   @UsePipes(ValidationPipe)
-  getTasks(@Query() filterDto: GetTaskFilterDto): Promise<Task[]> {
-    return this.tasksService.getTasks(filterDto);
+  getTasks(
+    @Query() filterDto: GetTaskFilterDto,
+    @Req() req,
+    ): Promise<Task[]> {
+    return this.tasksService.getTasks(filterDto, req.user);
   }
 
   @Get('/:id')
-  getTaskById(@Param('id', ParseIntPipe) id: number): Promise<Task> {
-    return this.tasksService.getTaskById(id);
+  getTaskById(
+    @Param('id', ParseIntPipe) id: number,
+    @Req() req,
+    ): Promise<Task> {
+    return this.tasksService.getTaskById(id, req.user);
   }
 
   @Delete('/:id')
-  deleteTaskById(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return this.tasksService.deleteTaskById(id);
+  deleteTaskById(
+    @Param('id', ParseIntPipe) id: number,
+    @Req() req,
+    ): Promise<void> {
+    return this.tasksService.deleteTaskById(id, req.user);
   }
 
   @Post()
   @UsePipes(ValidationPipe)
-  createTask(@Body() createTaskDto: CreateTaskDto): Promise<Task> {
-    return this.tasksService.createTask(createTaskDto);
+  createTask(
+    @Body() createTaskDto: CreateTaskDto,
+    @Req() req,
+  ): Promise<Task> {
+    return this.tasksService.createTask(createTaskDto, req.user);
   }
-
   @Patch('/:id/status')
   updateTaskById(
     @Param('id', ParseIntPipe) id: number,
     @Body('status', TaskStatusValidationPipe) status: TaskStatus,
+    @Req() req,
   ): Promise<Task> {
-    return this.tasksService.updateStatusTask(id, status);
+    return this.tasksService.updateStatusTask(id, status, req.user);
   }
 }
